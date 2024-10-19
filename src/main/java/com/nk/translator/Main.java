@@ -89,7 +89,7 @@ public class Main extends Application
 		textArea.setPrefHeight(600);
 		textArea.setFont(font);
 		textArea.setWrapText(true);
-		textArea.setText("Enter text here");
+		textArea.setText("Enter long text here and click translate");
 		flowPane = new FlowPane(Orientation.HORIZONTAL, 10, 5);
 		flowPane.setPrefSize(1200, 600);
 		ScrollPane scrollPane = new ScrollPane(flowPane);
