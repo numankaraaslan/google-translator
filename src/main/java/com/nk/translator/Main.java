@@ -40,6 +40,7 @@ public class Main extends Application
 	private Button buttonReset;
 	private TextArea textArea;
 	private FlowPane flowPane;
+	private ScrollPane scrollPane;
 	private HBox hbox1;
 	private Font font = Font.font("Arial", 28);
 	private TextField textfield;
@@ -70,33 +71,38 @@ public class Main extends Application
 			public void handle(MouseEvent event)
 			{
 				flowPane.getChildren().clear();
-				root.getChildren().remove(flowPane);
+				root.getChildren().remove(scrollPane);
 				root.getChildren().add(textArea);
 				buttonReset.setDisable(true);
 				buttonParse.setDisable(false);
+				textArea.setText("");
+				textArea.requestFocus();
 			}
 		});
 		textfield = new TextField();
-		textfield.setMinWidth(1100);
+		textfield.setMinWidth(400);
 		textfield.setFont(font);
 		hbox1 = new HBox(10);
 		hbox1.getChildren().addAll(buttonParse, buttonReset, textfield);
 		root = new VBox(10);
 		root.setPadding(new Insets(10, 10, 10, 10));
-		root.setBackground(Background.fill(Paint.valueOf("white")));
+		Scene scene = new Scene(root, 1400, 720);
 		textArea = new TextArea();
 		textArea.setPrefWidth(1100);
 		textArea.setPrefHeight(600);
 		textArea.setFont(font);
 		textArea.setWrapText(true);
-		textArea.setText("Enter long text here and click translate");
+		textArea.setText("Enter text here");
 		flowPane = new FlowPane(Orientation.HORIZONTAL, 10, 5);
-		flowPane.setPrefSize(1200, 600);
-		ScrollPane scrollPane = new ScrollPane(flowPane);
-		scrollPane.setPrefSize(1200, 600);
+		scrollPane = new ScrollPane(flowPane);
+		flowPane.setPadding(new Insets(10, 10, 10, 10));
+		flowPane.prefWidthProperty().bind(scrollPane.widthProperty().subtract(40));
+		flowPane.prefHeightProperty().bind(scrollPane.heightProperty().subtract(10));
+		flowPane.setBackground(Background.fill(Paint.valueOf("white")));
+		scrollPane.prefWidthProperty().bind(root.widthProperty().subtract(10));
+		scrollPane.prefHeightProperty().bind(root.heightProperty().subtract(10));
 		root.getChildren().add(hbox1);
 		root.getChildren().add(textArea);
-		Scene scene = new Scene(root, 1400, 720);
 		stage.setScene(scene);
 		stage.show();
 	}
@@ -109,7 +115,7 @@ public class Main extends Application
 			public void handle(Event event)
 			{
 				root.getChildren().remove(textArea);
-				root.getChildren().add(flowPane);
+				root.getChildren().add(scrollPane);
 				buttonReset.setDisable(false);
 				buttonParse.setDisable(true);
 				String[] splitted = textArea.getText().split(" ");
@@ -153,8 +159,9 @@ public class Main extends Application
 		// you might want to change these
 		String projectId = "translationproject-439019";
 		String targetLanguage = "en";
+		String sourceLanguage = "fr";
 		String result = "";
-		TranslateTextRequest request = TranslateTextRequest.newBuilder().setParent(LocationName.of(projectId, "global").toString()).setMimeType("text/plain").setTargetLanguageCode(targetLanguage).addContents(text).build();
+		TranslateTextRequest request = TranslateTextRequest.newBuilder().setParent(LocationName.of(projectId, "global").toString()).setMimeType("text/plain").setSourceLanguageCode(sourceLanguage).setTargetLanguageCode(targetLanguage).addContents(text).build();
 		TranslateTextResponse response = client.translateText(request);
 		for (Translation translation : response.getTranslationsList())
 		{
