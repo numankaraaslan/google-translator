@@ -118,7 +118,7 @@ public class Main extends Application
 				root.getChildren().add(scrollPane);
 				buttonReset.setDisable(false);
 				buttonParse.setDisable(true);
-				String[] splitted = textArea.getText().split(" ");
+				String[] splitted = textArea.getText().replace("\n", " ").split(" ");
 				for (String somestr : splitted)
 				{
 					Label someButton = new Label(somestr);
@@ -158,8 +158,8 @@ public class Main extends Application
 	{
 		// you might want to change these
 		String projectId = "translationproject-439019";
-		String targetLanguage = "en";
 		String sourceLanguage = "fr";
+		String targetLanguage = "en";
 		String result = "";
 		TranslateTextRequest request = TranslateTextRequest.newBuilder().setParent(LocationName.of(projectId, "global").toString()).setMimeType("text/plain").setSourceLanguageCode(sourceLanguage).setTargetLanguageCode(targetLanguage).addContents(text).build();
 		TranslateTextResponse response = client.translateText(request);
